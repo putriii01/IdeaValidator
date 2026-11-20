@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IdeaValidator — Kelompok 3 XI PPLG 2</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Sora:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- SIDEBAR -->
+<aside class="sidebar no-print" id="sidebar">
+  <div class="brand"><span class="logo"><i class="bi bi-lightbulb-fill"></i></span><div><b>IdeaValidator</b><small>Feasibility vs Impact</small></div></div>
+  <nav class="nav-x">
+    <a class="nav-link-x active" href="#dashboard"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+    <a class="nav-link-x" href="#input"><i class="bi bi-plus-circle-fill"></i> Tambah Ide</a>
+    <a class="nav-link-x" href="#tabel"><i class="bi bi-table"></i> Tabel Validasi <span class="navbadge" id="navCount">0</span></a>
+    <a class="nav-link-x" href="#grafik"><i class="bi bi-bar-chart-line-fill"></i> Grafik</a>
+    <a class="nav-link-x" href="#pickPanel"><i class="bi bi-bullseye"></i> Ide Terpilih</a>
+    <a class="nav-link-x" href="#report"><i class="bi bi-file-earmark-text-fill"></i> Laporan</a>
+  </nav>
+  <div class="side-foot"><b>Kelompok 3 · XI PPLG 2</b><small>Anggun Permatasari<br>Muhammad Fathan Ali Khalifah<br>Putri Aprilia<br>Siti Nur Shakila</small></div>
+</aside>
+
+<button class="menu-btn no-print" id="btnMenu" aria-label="Buka menu"><i class="bi bi-list"></i></button>
+
+<main class="main">
+  <!-- 1. HEADER, IDENTITAS & KPI (ikut tercetak) -->
+  <header class="hero mb-4" id="dashboard">
+    <h1 class="fw-bold"><i class="bi bi-lightbulb-fill accent"></i> IdeaValidator <span class="pink">— Matriks Prioritas Feasibility vs Impact</span></h1>
+    <p class="text-secondary mb-2">Studi Kasus E-Commerce Sepatu Wanita · Kelompok 3 · XI PPLG 2</p>
+    <p class="members d-none d-print-block">Anggota: Anggun Permatasari, Muhammad Fathan Ali Khalifah, Putri Aprilia, Siti Nur Shakila</p>
+    <div class="row g-3 kpi-row" id="kpi">
+      <div class="col-6 col-lg-3"><div class="kpi"><i class="bi bi-collection kpi-ic"></i><small>Total Ide</small><h3 id="kpiTotal">0</h3></div></div>
+      <div class="col-6 col-lg-3"><div class="kpi"><i class="bi bi-star-fill kpi-ic"></i><small>Prioritas Utama</small><h3 id="kpiPrio">0</h3></div></div>
+      <div class="col-6 col-lg-3"><div class="kpi"><i class="bi bi-speedometer2 kpi-ic"></i><small>Rata-rata Skor</small><h3 id="kpiAvg">0</h3></div></div>
+      <div class="col-6 col-lg-3"><div class="kpi"><i class="bi bi-trophy-fill kpi-ic"></i><small>Ide Terpilih</small><h6 id="kpiPick" class="mb-0 mt-2">-</h6></div></div>
+    </div>
+  </header>
+
+  <!-- Ringkasan 4 kuadran (diisi app.js) -->
+  <section class="row g-3 mb-4 no-print" id="quadCards"></section>
+
+  <!-- 2. FORM INPUT -->
+  <section class="panel mb-4 no-print" id="input">
+    <h5 class="mb-3"><i class="bi bi-plus-circle accent"></i> <span id="formTitle">Tambah Ide Solusi</span></h5>
+    <div id="formMsg"></div>
+    <form id="ideaForm" class="row g-3" novalidate>
+      <div class="col-md-5"><label class="form-label">Nama Ide Solusi</label>
+        <input id="fNama" class="form-control" placeholder="mis. Transparent Checkout Breakdown"></div>
+      <div class="col-md-3"><label class="form-label">Target Pengguna</label>
+        <select id="fTarget" class="form-select"><option value="">-- Pilih --</option><option>Penjual</option><option>Pembeli</option></select></div>
+      <div class="col-6 col-md-2"><label class="form-label">Feasibility (1–5)</label>
+        <select id="fF" class="form-select score-sel"></select></div>
+      <div class="col-6 col-md-2"><label class="form-label">Impact (1–5)</label>
+        <select id="fI" class="form-select score-sel"></select></div>
+      <div class="col-12 d-flex flex-wrap gap-2">
+        <button class="btn btn-tosca" type="submit"><i class="bi bi-save"></i> <span id="btnSubmit">Simpan Ide</span></button>
+        <button class="btn btn-outline-secondary" type="button" id="btnCancel" hidden>Batal Edit</button>
+        <button class="btn btn-pink ms-md-auto" type="button" id="btnPreset"><i class="bi bi-database-down"></i> Muat 10 Ide Kelompok 3 (Data LKPD 5)</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- 4. TABEL INTERAKTIF -->
+  <section class="panel mb-4 no-print" id="tabel">
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+      <h5 class="mb-0 me-auto"><i class="bi bi-table accent"></i> Tabel Validasi Ide</h5>
+      <input id="search" class="form-control w-auto" placeholder="Cari ide...">
+      <select id="filterQ" class="form-select w-auto">
+        <option value="">Semua Kuadran</option><option value="prioritas">⭐ Prioritas Utama</option>
+        <option value="potensi">Potensi</option><option value="pertimbangkan">Pertimbangkan</option><option value="tunda">Tunda</option>
+      </select>
+      <button class="btn btn-outline-secondary btn-sm" id="btnExport"><i class="bi bi-download"></i> Export JSON</button>
+      <button class="btn btn-outline-danger btn-sm" id="btnReset"><i class="bi bi-trash"></i> Reset Data</button>
+    </div>
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead><tr><th>No</th><th>Nama Ide</th><th>Target</th><th>Feasibility</th><th>Impact</th><th>Total</th><th>Kuadran</th><th>Aksi</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 5. DUA GRAFIK -->
+  <section class="row g-3 mb-4 chart-row" id="grafik">
+    <div class="col-lg-6">
+      <div class="panel h-100">
+        <h6>Grafik Matriks Feasibility vs Impact</h6>
+        <div class="chart-box"><canvas id="chartScatter"></canvas></div>
+        <p class="chart-note mb-0 mt-2" id="chartNote"></p>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="panel h-100">
+        <h6>Grafik Total Skor</h6>
+        <div class="chart-box"><canvas id="chartBar"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. PANEL IDE TERPILIH -->
+  <section class="panel mb-4 no-print" id="pickPanel"></section>
+
+  <!-- 7. LAPORAN -->
+  <section class="panel" id="report">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="mb-0"><i class="bi bi-file-earmark-text accent"></i> Laporan Hasil Survei &amp; Validasi Ide</h4>
+      <button class="btn btn-tosca no-print" id="btnPrint"><i class="bi bi-printer"></i> Cetak / Simpan Laporan (PDF)</button>
+    </div>
+    <p class="mb-1"><b>LKPD 6 — Validitas Ide Menggunakan Logika Quadran</b> · Kelas XI PPLG 2 · Kelompok 3</p>
+    <p class="text-secondary mb-3">Anggota: Anggun Permatasari, Muhammad Fathan Ali Khalifah, Putri Aprilia, Siti Nur Shakila</p>
+    <div class="table-responsive"><table class="table table-sm">
+      <thead><tr><th>Peringkat</th><th>Nama Ide</th><th>Target</th><th>F</th><th>I</th><th>Total</th><th>Kuadran</th></tr></thead>
+      <tbody id="reportBody"></tbody></table></div>
+    <div class="conclusion" id="conclusion"></div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
